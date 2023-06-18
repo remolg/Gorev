@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/app.js" defer></script>
+    <title>Task</title> 
+</head>
+<body>
+    <div class="container">
+
+        <h1>Kişileri Kaydet</h1>
+
+        <div class="card-body">
+            <form class="task">
+
+                <div class="enter-name">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Adınız" required autocomplete="off">
+                </div>
+
+                <div class="enter-phone">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" placeholder="+90" required autocomplete="off">
+                </div>
+                
+                <button class="btn save" type="submit">Kaydet</button>
+
+            </form>
+        </div>
+
+
+        <h1>Kaydedilen Kişiler</h1>
+
+        <ul class="recorded">
+            
+        </ul>
+
+        <button id="clear-all" class="btn">Tümünü temizle</button>
+
+    </div>
+</body>
+</html>
