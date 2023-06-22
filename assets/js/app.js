@@ -25,14 +25,13 @@ function filter(e){
     if(kaydedilenler.length > 0){
         kaydedilenler.forEach(function(kayitli){
             var isimInput = kayitli.querySelector('input[type="text"]');
-            console.log(isimInput);
             if(isimInput.value.toLowerCase().trim().includes(filterValue)){
-                kayitli.setAttribute("style", "display:block");
+                kayitli.setAttribute("style", "display:flex");
             }else{
                 kayitli.setAttribute("style", "display:none");
             }
         })
-    }else{
+    }else {
         showAlert("warning","HERHANGI BIR KAYIT BULUNMAMAKTADIR");
     }
 }
@@ -69,7 +68,6 @@ function edit(li) {
 
             // Storage'de güncelleme
             updateListInStorage(li, name, number);
-            sadik = name;
 
             if(once <= 1){
                 showAlert("success", "Değişiklikler kaydedildi.");
@@ -124,24 +122,42 @@ function allListRemove() {
     
 }
 
+// yapılacak
+
+function checkList(inputText){
+    const kayitlilar = document.querySelectorAll("li");
+    kayitlilar.forEach(function(kayitli){
+        var isimInput = kayitli.querySelector('input[type="text"]');
+        console.log(isimInput);
+        if(isimInput.value.toLowerCase().trim().includes(inputText)){
+            showAlert("warning", "böyle bir kayit vardir")
+            return true;
+        }
+    })
+}
+
 function addList(e) {
     const inputText = nameInput.value.trim();
     const inputNumber = parseInt(phoneInput.value.trim());
+
     
     if (!isNaN(inputText)) {
         showAlert("warning","Lütfen isminizi doğru yazınız!")
-        
+            
     }else if(isNaN(inputNumber)){
         showAlert("warning","Lütfen Numaranızı doğru yazınız!")
-        
+            
+    }else if(checkList(inputText) == true){
+        checkList(inputText);
+        return;
     }
     else {
         addListToUI(inputText,inputNumber);
-        //storage ekleme
+
         addListToStorage(inputText, inputNumber);
     }
     e.preventDefault()
-    
+        
 }
 
 function addListToUI(name,number) {
@@ -214,10 +230,9 @@ function updateListInStorage(li, name, number) {
 
 function justNumbers() {
     const enteredValue = phoneInput.value;
-    // Sadece sayıları al
-    const numbersOnly = enteredValue.replace(/\D/g, '');
+    const numbersOnly = enteredValue.replace(/[^0-9]/g, '');
   
-    if (numbersOnly.length > 11) {
+    if (numbersOnly.length >= 11) {
       phoneInput.value = numbersOnly.slice(0, 11);
     }
 }
