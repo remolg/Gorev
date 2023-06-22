@@ -64,7 +64,9 @@ function edit(li) {
 // li sil
 function removeList(e){
     if(e.target.className === "fa-solid fa-xmark"){
-        const li = e.target.parentElement.parentElement;
+        var confirmDelete = confirm('Silmek istiyor musunuz?');
+        if(confirmDelete) {
+            const li = e.target.parentElement.parentElement;
         const name = li.querySelector(".person-info input[type='text']").value;
         const number = li.querySelector(".person-info input[type='number']").value;
     
@@ -73,6 +75,8 @@ function removeList(e){
         // Storage'den silme
         removeListFromStorage(name, number);
         showAlert("success", "Başarıyla silindi.");
+        }
+        
     }else if(e.target.className === "fa-regular fa-pen-to-square" ) {
         const li = e.target.parentElement.parentElement
         edit(li);
