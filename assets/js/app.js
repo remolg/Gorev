@@ -205,8 +205,8 @@ function justNumbers() {
     // Sadece sayıları al
     const numbersOnly = enteredValue.replace(/\D/g, '');
   
-    if (numbersOnly.length > 10) {
-      phoneInput.value = numbersOnly.slice(0, 10);
+    if (numbersOnly.length > 11) {
+      phoneInput.value = numbersOnly.slice(0, 11);
     }
 }
 
