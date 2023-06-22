@@ -15,14 +15,14 @@ function runEvents() {
     tumunuTemizle.addEventListener("click", allListRemove);
     window.addEventListener("load", pageLoaded);
     phoneInput.addEventListener('input', justNumbers);
-
+    
 };
-
 
 function edit(li) {
     const inputs = li.querySelectorAll(".person-info input");
-    const edit = li.querySelector(".fa-pen-to-square")
+    const edit = li.querySelector(".fa-pen-to-square");
     const save = li.querySelector(".fa-check");
+    let sadik = li.querySelector('input[type="text"]');
 
     save.style.visibility = "visible";
     edit.style.display = "none";
@@ -39,16 +39,19 @@ function edit(li) {
     save.addEventListener("click",() => {
         edit.style.display = "block";
         save.style.visibility = "hidden";
-
+        let a = inputs[0].value;
+        console.log(a.trim());
+        
         inputs.forEach(input => {
             input.style.border = "none";
             input.readOnly = true;
             
-            const name = inputs[0].value;
+            const name = inputs[0].value.trim();
             const number = inputs[1].value;
 
             // Storage'de güncelleme
             updateListInStorage(li, name, number);
+            sadik = name;
 
             if(once <= 1){
                 showAlert("success", "Değişiklikler kaydedildi.");
@@ -120,6 +123,7 @@ function addList(e) {
     e.preventDefault()
     
 }
+
 
 // ekrana yazdir ve liste dizisine pushla
 function addListToUI(name,number) {
