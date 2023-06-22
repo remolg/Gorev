@@ -5,6 +5,7 @@ const tumunuTemizle = document.querySelector("#clear-all");
 const ul = document.querySelector(".recorded");
 const form = document.querySelector(".task");
 const cardBody = document.querySelector(".card-body");
+const arama = document.querySelector("#nameSearch");
 
 let liste = [];
 
@@ -15,8 +16,26 @@ function runEvents() {
     tumunuTemizle.addEventListener("click", allListRemove);
     window.addEventListener("load", pageLoaded);
     phoneInput.addEventListener('input', justNumbers);
-    
+    arama.addEventListener("keyup",filter)
 };
+
+function filter(e){
+    const filterValue = e.target.value.toLowerCase().trim();
+    const kaydedilenler = document.querySelectorAll("li");
+    if(kaydedilenler.length > 0){
+        kaydedilenler.forEach(function(kayitli){
+            var isimInput = kayitli.querySelector('input[type="text"]');
+            console.log(isimInput);
+            if(isimInput.value.toLowerCase().trim().includes(filterValue)){
+                kayitli.setAttribute("style", "display:block");
+            }else{
+                kayitli.setAttribute("style", "display:none");
+            }
+        })
+    }else{
+        showAlert("warning","HERHANGI BIR KAYIT BULUNMAMAKTADIR");
+    }
+}
 
 function edit(li) {
     const inputs = li.querySelectorAll(".person-info input");
