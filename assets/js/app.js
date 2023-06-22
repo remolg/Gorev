@@ -132,7 +132,7 @@ function addListToUI(name,number) {
         <div class="person-info">
             <div>
                 <span>İsim: </span>
-                <input type="text" value="${name}" readonly="">
+                <input type="text" value="${name}" maxlength="25" readonly="">
             </div>
             <div>
                 <span>Telefon: </span> 
