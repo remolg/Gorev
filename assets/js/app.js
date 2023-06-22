@@ -33,7 +33,6 @@ function edit(li) {
         input.readOnly = false;
     });
 
-    // success alert bir defa calismasi icin
     let once = 1;
 
     save.addEventListener("click",() => {
@@ -61,7 +60,6 @@ function edit(li) {
     })
 }
 
-// li sil
 function removeList(e){
     if(e.target.className === "fa-solid fa-xmark"){
         var confirmDelete = confirm('Silmek istiyor musunuz?');
@@ -83,8 +81,6 @@ function removeList(e){
     }
 }
 
-
-// butun listeyi sil
 function allListRemove() {
     let allLi = document.querySelectorAll("li"); 
 
@@ -103,11 +99,12 @@ function allListRemove() {
         }else {
             showAlert("warning", "Silme işlemi iptal edildi.")
         }
-    } 
+    }else {
+        showAlert("warning", "Herhangi bir kayıt bulunmamaktadır")
+    }
     
 }
 
-// listeye ekle
 function addList(e) {
     const inputText = nameInput.value.trim();
     const inputNumber = parseInt(phoneInput.value.trim());
@@ -128,8 +125,6 @@ function addList(e) {
     
 }
 
-
-// ekrana yazdir ve liste dizisine pushla
 function addListToUI(name,number) {
     ul.innerHTML += `
     <li>
@@ -154,7 +149,6 @@ function addListToUI(name,number) {
     phoneInput.value = "";
 }
 
-// sayfa yuklendiginde ekrana storage'dekileri getir
 function pageLoaded() {
     checkListFromStorage();
     liste.forEach( li => {
@@ -162,14 +156,12 @@ function pageLoaded() {
     })
 }
 
-// storage ve listeye kaydet
 function addListToStorage(inputText, inputNumber){
     checkListFromStorage();
     liste.push({name:inputText,number:inputNumber});
     localStorage.setItem("liste", JSON.stringify(liste));
 }
 
-// tum storage silme
 function checkListFromStorage() {
     if(localStorage.getItem("liste") === null) {
         liste = [];
@@ -178,7 +170,6 @@ function checkListFromStorage() {
     }
 }
 
-// silinmek istenen tek bir kayit islemini storage'den sil
 function removeListFromStorage(name, number) {
     checkListFromStorage();
     liste = liste.filter((item) => item.name !== name || item.number !== number);
@@ -191,7 +182,6 @@ function removeListFromStorage(name, number) {
     localStorage.setItem("liste", JSON.stringify(liste));
 }
 
-// duzenlenen bilgileri storage kaydet 
 function updateListInStorage(li, name, number) {
     checkListFromStorage();
     const index = Array.from(ul.children).indexOf(li);
@@ -203,7 +193,6 @@ function updateListInStorage(li, name, number) {
     }
 }
 
-// ilk girilen input kisminda karakter sinirla
 function justNumbers() {
     const enteredValue = phoneInput.value;
     // Sadece sayıları al
