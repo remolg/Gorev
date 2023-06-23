@@ -20,9 +20,6 @@ function runEvents() {
     arama.addEventListener("keyup",filter)
 };
 
-
-
-
 function filter(e){
     const filterValue = e.target.value.toLowerCase().trim();
     const kaydedilenler = document.querySelectorAll("li");
@@ -81,7 +78,7 @@ function edit(li) {
                 const number = inputs[1].value.trim();
 
                 updateListInStorage(li, name, number);
-                pageLoaded();
+                // pageLoaded();
 
                 if(once <= 1){
                     showAlert("success", "Değişiklikler kaydedildi.");
@@ -139,28 +136,6 @@ function allListRemove() {
     
 }
 
-
-
-
-// function checkList(inputText) {
-//     const kayitlilar = document.querySelectorAll("li");
-//     let kayitVar = false;
-  
-//     kayitlilar.forEach(function (kayitli) {
-//       var isimInput = kayitli.querySelector('input[type="text"]');
-//       if (isimInput.value.toLowerCase().trim().includes(inputText)) {
-//         kayitVar = true;
-//         showAlert("warning", "Bu kayıt zaten mevcut!");
-//       }
-//     });
-  
-//     if (!kayitVar) {
-//       // Kaydı listeye ekleme işlemi burada yapılabilir
-//       // ...
-//     }
-  
-// }
-
 function addList(e) {
     const inputText = nameInput.value.trim();
     const inputNumber = parseInt(phoneInput.value.trim());
@@ -172,7 +147,7 @@ function addList(e) {
         let isimInput = kayitli.querySelector('input[type="text"]');
         let numberInput = kayitli.querySelector('input[type="number"]');
         listedekiIsimler.push(isimInput.value);
-        listedekiNumaralar.push(numberInput.value);
+        listedekiNumaralar.push(parseInt(numberInput.value));
     })
 
     if (!isNaN(inputText)) {
@@ -181,7 +156,7 @@ function addList(e) {
     }else if(isNaN(inputNumber)){
         showAlert("warning","Lütfen Numaranızı doğru yazınız!")
             
-    }else if(listedekiIsimler.includes(inputText) && listedekiNumaralar.includes(inputNumber)){
+    }else if(listedekiIsimler.includes(inputText) || listedekiNumaralar.includes(inputNumber)){
         showAlert("warning", "böyle bir kayit vardir")
     }
     else {
