@@ -8,7 +8,7 @@ const cardBody = document.querySelector(".card-body");
 const arama = document.querySelector("#nameSearch");
 
 let liste = [];
-let once = 1;
+
 
 runEvents();
 function runEvents() {
@@ -25,23 +25,14 @@ function filter(e) {
     const kaydedilenler = document.querySelectorAll("li");
 
     if (kaydedilenler.length > 0) {
-        kaydedilenler.forEach(function (kayitli) {
+        kaydedilenler.forEach((kayitli) => {
             var isimInput = kayitli.querySelector('input[type="text"]');
-            if (isimInput.value.toLowerCase().trim().includes(filterValue)) {
-                kayitli.setAttribute("style", "display:flex");
-            } else {
-                kayitli.setAttribute("style", "display:none");
-            }
+            isimInput.value.toLowerCase().trim().includes(filterValue) ? kayitli.setAttribute("style", "display:flex") : kayitli.setAttribute("style", "display:none");
         })
     } else {
-        if (once === 1) {
-            showAlert("warning", "HERHANGI BIR KAYIT BULUNMAMAKTADIR");
-            once++;
-        }
+        showPopup('error', 'Afedersin...', 'HERHANGI BIR KAYIT BULUNMAMAKTADIR');
     }
-    e.target.addEventListener("blur", () => {
-        once = 1;
-    })
+
 }
 
 
@@ -80,31 +71,39 @@ function edit(li) {
                 updateListInStorage(li, name, number);
                 pageLoaded();
 
-                if (once <= 1) {
-                    showAlert("success", "Değişiklikler kaydedildi.");
-                }
-                once++;
+                showPopup('success', 'Tebrikler!', 'Kayıt düzenlendi');
             });
             localStorage.removeItem('kilitlemeBayragi');
         })
     } else {
-        showAlert("warning", "Kayıt şu anda başka bir sekmede düzenleniyor");
+        showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
     }
 }
 
 function removeList(e) {
     if (e.target.className === "fa-solid fa-xmark") {
-        var confirmDelete = confirm('Silmek istiyor musunuz?');
-        if (confirmDelete) {
-            const li = e.target.parentElement.parentElement;
-            const name = li.querySelector(".person-info input[type='text']").value;
-            const number = li.querySelector(".person-info input[type='number']").value;
+        Swal.fire({
+            title: 'DİKKAT',
+            text: "Silmek istiyor musunuz?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet!',
+            cancelButtonText: 'Hayır!'
 
-            li.remove();
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const li = e.target.parentElement.parentElement;
+                const name = li.querySelector(".person-info input[type='text']").value;
+                const number = li.querySelector(".person-info input[type='number']").value;
 
-            removeListFromStorage(name, number);
-            showAlert("success", "Başarıyla silindi.");
-        }
+                li.remove();
+
+                removeListFromStorage(name, number);
+                showPopup('success', 'Tebrikler!', 'Başarıyla silindi.');
+            }
+        })
 
     } else if (e.target.className === "fa-regular fa-pen-to-square") {
         const li = e.target.parentElement.parentElement
@@ -116,24 +115,31 @@ function allListRemove() {
     let allLi = document.querySelectorAll("li");
 
     if (allLi.length > 0) {
-        const confirmed = confirm('Tüm listeyi silmek istediğinize emin misiniz?');
-
-        if (confirmed) {
-            allLi.forEach((li) => {
-                li.remove();
-            })
-
-            liste = [];
-            localStorage.setItem("liste", JSON.stringify(liste))
-            showAlert("success", "Tüm kayıt listesi silindi.")
-            localStorage.removeItem('kilitlemeBayragi');
-        } else {
-            showAlert("warning", "Silme işlemi iptal edildi.")
-        }
+        Swal.fire({
+            title: 'DİKKAT',
+            text: "Tüm listeyi silmek istediğinize emin misiniz?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil gitsin!',
+            cancelButtonText: 'Hayır'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                allLi.forEach((li) => {
+                    li.remove();
+                })
+                liste = [];
+                localStorage.setItem("liste", JSON.stringify(liste))
+                localStorage.removeItem('kilitlemeBayragi');
+                showPopup('success', 'Tebrikler!', 'Tüm kayıt listesi silindi.');
+            } else {
+                showPopup('success', 'Tebrikler!', 'Silme işlemi iptal edildi');
+            }
+        })
     } else {
-        showAlert("warning", "Herhangi bir kayıt bulunmamaktadır")
+        showPopup('error', 'BURASI BOMBOŞ', 'Herhangi bir kayıt bulunmamaktadır');
     }
-
 }
 
 function addList(e) {
@@ -143,26 +149,28 @@ function addList(e) {
     let listedekiIsimler = [];
     let listedekiNumaralar = [];
 
-    kayitlilar.forEach(function (kayitli) {
-        let isimInput = kayitli.querySelector('input[type="text"]');
-        let numberInput = kayitli.querySelector('input[type="number"]');
-        listedekiIsimler.push(isimInput.value);
-        listedekiNumaralar.push(parseInt(numberInput.value));
-    })
+    if (nameInput.value === '' || phoneInput.value === '') {
+        console.log(nameInput.value)
+        showPopup('error', 'Boş Kutu', 'Lütfen kutucukları doldurun');
+    } else {
+        kayitlilar.forEach(function (kayitli) {
+            let isimInput = kayitli.querySelector('input[type="text"]');
+            let numberInput = kayitli.querySelector('input[type="number"]');
+            listedekiIsimler.push(isimInput.value);
+            listedekiNumaralar.push(parseInt(numberInput.value));
+        })
+        if (!isNaN(inputText)) {
+            showPopup('error', 'İsim Hatası', 'Lütfen isminizi doğru yazınız!');
+        } else if (phoneInput.value.length < 11 || phoneInput.value.length > 11) {
+            showPopup('error', 'Numara Hatası', 'Lütfen Numaranızı doğru yazınız!');
+        } else if (listedekiIsimler.includes(inputText) || listedekiNumaralar.includes(inputNumber)) {
+            showPopup('error', 'Dikkat', 'Böyle bir kayit vardir');
+        }
+        else {
+            addListToUI(inputText, inputNumber);
 
-    if (!isNaN(inputText)) {
-        showAlert("warning", "Lütfen isminizi doğru yazınız!")
-
-    } else if (isNaN(inputNumber)) {
-        showAlert("warning", "Lütfen Numaranızı doğru yazınız!")
-
-    } else if (listedekiIsimler.includes(inputText) || listedekiNumaralar.includes(inputNumber)) {
-        showAlert("warning", "böyle bir kayit vardir")
-    }
-    else {
-        addListToUI(inputText, inputNumber);
-
-        addListToStorage(inputText, inputNumber);
+            addListToStorage(inputText, inputNumber);
+        }
     }
     e.preventDefault()
 
@@ -248,12 +256,13 @@ function justNumbers() {
     }
 }
 
-function showAlert(type, message) {
-    const div = document.createElement("div");
-    div.className = `alert alert-${type}`;
-    div.textContent = message;
-    cardBody.appendChild(div);
-    setTimeout(() => {
-        div.remove();
-    }, 2400)
-};
+function showPopup(icon, title, text) {
+    Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+    });
+}
+
+// qs kislat
+// id ekle 
