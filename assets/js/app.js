@@ -18,6 +18,7 @@ function runEvents() {
     window.addEventListener("load", pageLoaded);
     phoneInput.addEventListener('input', justNumbers);
     arama.addEventListener("keyup", filter)
+
 };
 
 function filter(e) {
@@ -42,9 +43,13 @@ function edit(li) {
         const inputs = li.querySelectorAll(".person-info input");
         const edit = li.querySelector(".fa-pen-to-square");
         const save = li.querySelector(".fa-check");
+        const cancel = li.querySelector(".fa-ban");
+        const deleteButton = li.querySelector(".fa-xmark");
 
         save.style.visibility = "visible";
+        cancel.style.visibility = "visible";
         edit.style.display = "none";
+        deleteButton.style.display = "none";
 
 
 
@@ -55,10 +60,28 @@ function edit(li) {
 
         localStorage.setItem('kilitlemeBayragi', true);
 
+        cancel.addEventListener("click", () => {
+            deleteButton.style.display = "block";
+            edit.style.display = "block";
+            save.style.visibility = "hidden";
+            cancel.style.visibility = "hidden";
+
+            inputs.forEach(input => {
+                input.style.border = "none";
+                input.readOnly = true;
+
+                pageLoaded();
+                showPopup('error', 'Aman Dikkat!', 'Kayıt düzenlemesi iptal edildi.');
+            });
+
+            localStorage.removeItem('kilitlemeBayragi');
+        })
+
 
         save.addEventListener("click", () => {
             edit.style.display = "block";
             save.style.visibility = "hidden";
+            cancel.style.visibility = "hidden";
 
 
             inputs.forEach(input => {
@@ -191,6 +214,7 @@ function addListToUI(name, number) {
         </div>
         <div class="changes">   
             <i class="fa-solid fa-check" style="visibility:hidden"></i>
+            <i class="fa-solid fa-ban" style="visibility:hidden"></i>
             <i class="fa-regular fa-pen-to-square"></i>
             <i class="fa-solid fa-xmark"></i>
         </div>
