@@ -12,6 +12,9 @@ let liste = [];
 
 runEvents();
 function runEvents() {
+    window.addEventListener('load', function () {
+        idCounter = parseInt(localStorage.getItem('idCounter')) || 1;
+    });
     form.addEventListener("submit", addList);
     ul.addEventListener("click", removeList);
     tumunuTemizle.addEventListener("click", allListRemove);
@@ -46,12 +49,10 @@ function edit(li) {
         const cancel = li.querySelector(".fa-ban");
         const deleteButton = li.querySelector(".fa-xmark");
 
-        save.style.visibility = "visible";
-        cancel.style.visibility = "visible";
+        save.style.display = "block";
+        cancel.style.display = "block";
         edit.style.display = "none";
         deleteButton.style.display = "none";
-
-
 
         inputs.forEach(input => {
             input.style.border = "1px solid";
@@ -60,29 +61,13 @@ function edit(li) {
 
         localStorage.setItem('kilitlemeBayragi', true);
 
-        cancel.addEventListener("click", () => {
-            deleteButton.style.display = "block";
-            edit.style.display = "block";
-            save.style.visibility = "hidden";
-            cancel.style.visibility = "hidden";
-
-            inputs.forEach(input => {
-                input.style.border = "none";
-                input.readOnly = true;
-
-                pageLoaded();
-                showPopup('error', 'Aman Dikkat!', 'Kayıt düzenlemesi iptal edildi.');
-            });
-
-            localStorage.removeItem('kilitlemeBayragi');
-        })
 
 
         save.addEventListener("click", () => {
-            edit.style.display = "block";
-            save.style.visibility = "hidden";
-            cancel.style.visibility = "hidden";
 
+            edit.style.display = "block";
+            save.style.display = "none";
+            cancel.style.display = "none";
 
             inputs.forEach(input => {
                 input.style.border = "none";
@@ -98,6 +83,25 @@ function edit(li) {
             });
             localStorage.removeItem('kilitlemeBayragi');
         })
+
+        cancel.addEventListener("click", () => {
+            deleteButton.style.display = "block";
+            edit.style.display = "block";
+            save.style.display = "none";
+            cancel.style.display = "none";
+
+            inputs.forEach(input => {
+                input.style.border = "none";
+                input.readOnly = true;
+
+                pageLoaded();
+                showPopup('error', 'Aman Dikkat!', 'Kayıt düzenlemesi iptal edildi.');
+            });
+
+            localStorage.removeItem('kilitlemeBayragi');
+        })
+
+
     } else {
         showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
     }
@@ -152,8 +156,13 @@ function allListRemove() {
                 allLi.forEach((li) => {
                     li.remove();
                 })
+
                 liste = [];
-                localStorage.setItem("liste", JSON.stringify(liste))
+                localStorage.setItem("liste", JSON.stringify(liste));
+
+                idCounter = 1;
+                localStorage.setItem('idCounter', idCounter.toString());
+
                 localStorage.removeItem('kilitlemeBayragi');
                 showPopup('success', 'Tebrikler!', 'Tüm kayıt listesi silindi.');
             } else {
@@ -165,15 +174,20 @@ function allListRemove() {
     }
 }
 
+let idCounter = parseInt(localStorage.getItem('idCounter')) || 1;
+
+
+
 function addList(e) {
+    const itemId = idCounter;
     const inputText = nameInput.value.trim();
     const inputNumber = parseInt(phoneInput.value.trim());
     const kayitlilar = document.querySelectorAll("li");
     let listedekiIsimler = [];
     let listedekiNumaralar = [];
 
+
     if (nameInput.value === '' || phoneInput.value === '') {
-        console.log(nameInput.value)
         showPopup('error', 'Boş Kutu', 'Lütfen kutucukları doldurun');
     } else {
         kayitlilar.forEach(function (kayitli) {
@@ -190,31 +204,34 @@ function addList(e) {
             showPopup('error', 'Dikkat', 'Böyle bir kayit vardir');
         }
         else {
-            addListToUI(inputText, inputNumber);
+            addListToUI(inputText, inputNumber, itemId);
 
-            addListToStorage(inputText, inputNumber);
+            addListToStorage(inputText, inputNumber, itemId);
+
+            idCounter++;
+            localStorage.setItem('idCounter', idCounter.toString());
         }
     }
     e.preventDefault()
 
 }
 
-function addListToUI(name, number) {
+function addListToUI(name, number, itemId) {
     ul.innerHTML += `
-    <li>
+    <li id="${itemId}">
         <div class="person-info">
             <div>
                 <span>İsim: </span>
-                <input type="text" value="${name}" maxlength="25" readonly="">
+                <input type="text" id="${itemId}" value="${name}" maxlength="25" readonly="">
             </div>
             <div>
                 <span>Telefon: </span> 
-                <input type="number" value="${number}" maxlength="11" readonly="">
+                <input type="number" id="${itemId}" value="${number}" maxlength="11" readonly="">
             </div>
         </div>
         <div class="changes">   
-            <i class="fa-solid fa-check" style="visibility:hidden"></i>
-            <i class="fa-solid fa-ban" style="visibility:hidden"></i>
+            <i class="fa-solid fa-check" style="display:none"></i>
+            <i class="fa-solid fa-ban" style="display:none"></i>
             <i class="fa-regular fa-pen-to-square"></i>
             <i class="fa-solid fa-xmark"></i>
         </div>
@@ -229,13 +246,13 @@ function pageLoaded() {
     let listItems = document.querySelector('.recorded');
     listItems.innerHTML = '';
     liste.forEach(li => {
-        addListToUI(li.name, li.number);
+        addListToUI(li.name, li.number, li.id);
     })
 }
 
-function addListToStorage(inputText, inputNumber) {
+function addListToStorage(inputText, inputNumber, itemId) {
     checkListFromStorage();
-    liste.push({ name: inputText, number: inputNumber });
+    liste.push({ name: inputText, number: inputNumber, id: itemId });
     localStorage.setItem("liste", JSON.stringify(liste));
 }
 
@@ -262,7 +279,6 @@ function removeListFromStorage(name, number) {
 function updateListInStorage(li, name, number) {
     checkListFromStorage();
     const index = Array.from(ul.children).indexOf(li);
-    console.log(index);
     if (index !== -1) {
 
         liste[index].name = name;
