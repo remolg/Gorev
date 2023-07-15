@@ -112,7 +112,7 @@ li {
 
 .changes i {
     cursor: pointer;
-    font-size: 22px;    
+    font-size: 22px;
 }
 
 /* recorded end */
@@ -128,7 +128,7 @@ li {
 .alert-warning {
     color: #856404;
     background-color: #fff3cd;
-    
+
 }
 
 .alert {
@@ -141,6 +141,65 @@ li {
 .alert-success {
     color: #155724;
     background-color: #d4edda;
-    
+
 }
+
 /* ALERT END */
+
+
+/* MEDIA QUERIES */
+@media screen and (max-width: 600px) {
+
+    .container {
+        width: 320px;
+        margin: 40px auto 0;
+        background: #F8F9FB;
+        border-radius: 8px;
+        padding: 0 15px 15px 15px;
+    }
+
+    h1 {
+        font-size: 22px;
+        padding-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .task {
+        gap: 20px;
+    }
+
+    .enter-name,
+    .enter-phone {
+        gap: 12px;
+    }
+
+    #nameSearch {
+        font-size: 14px;
+    }
+
+    .person-info div {
+        display: flex;
+    }
+
+    li {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background-color: white;
+        border-radius: 7px;
+    }
+
+    .changes {
+        margin-left: auto;
+    }
+
+    .changes i {
+        font-size: 25px;
+    }
+
+    .person-info input {
+        width: 100%;
+    }
+
+}
