@@ -6,6 +6,7 @@ const ul = document.querySelector(".recorded");
 const form = document.querySelector(".task");
 const cardBody = document.querySelector(".card-body");
 const arama = document.querySelector("#nameSearch");
+const version = 1;
 
 let liste = [];
 
@@ -31,7 +32,8 @@ function filter(e) {
     if (kaydedilenler.length > 0) {
         kaydedilenler.forEach((kayitli) => {
             var isimInput = kayitli.querySelector('input[type="text"]');
-            isimInput.value.toLowerCase().trim().includes(filterValue) ? kayitli.setAttribute("style", "display:flex") : kayitli.setAttribute("style", "display:none");
+            isimInput.value.toLowerCase().trim().includes(filterValue) ?
+                kayitli.setAttribute("style", "display:flex") : kayitli.setAttribute("style", "display:none");
         })
     } else {
         showPopup('error', 'Afedersin...', 'HERHANGI BIR KAYIT BULUNMAMAKTADIR');
@@ -41,70 +43,76 @@ function filter(e) {
 
 
 function edit(li) {
-    if (localStorage.getItem('kilitlemeBayragi') === null) {
+    const inputs = li.querySelectorAll(".person-info input");
+    const edit = li.querySelector(".fa-pen-to-square");
+    const save = li.querySelector(".fa-check");
+    const cancel = li.querySelector(".fa-ban");
+    const deleteButton = li.querySelector(".fa-xmark");
 
-        const inputs = li.querySelectorAll(".person-info input");
-        const edit = li.querySelector(".fa-pen-to-square");
-        const save = li.querySelector(".fa-check");
-        const cancel = li.querySelector(".fa-ban");
-        const deleteButton = li.querySelector(".fa-xmark");
+    save.style.display = "block";
+    cancel.style.display = "block";
+    edit.style.display = "none";
+    deleteButton.style.display = "none";
 
-        save.style.display = "block";
-        cancel.style.display = "block";
-        edit.style.display = "none";
-        deleteButton.style.display = "none";
+    inputs.forEach(input => {
+        input.style.border = "1px solid";
+        input.readOnly = false;
+    });
 
-        inputs.forEach(input => {
-            input.style.border = "1px solid";
-            input.readOnly = false;
-        });
+    save.addEventListener("click", () => {
+        var versionPlus = li.getAttribute('version');
+        var veri = localStorage.getItem("liste");
+        var veriNesnesi = JSON.parse(veri);
+        var istenenIndex = li.id - 1;
+        var istenenVersiyon = veriNesnesi[istenenIndex].version;
 
-        localStorage.setItem('kilitlemeBayragi', true);
-
-
-
-        save.addEventListener("click", () => {
-
+        if (versionPlus == istenenVersiyon) {
+            console.log(versionPlus, istenenVersiyon)
+            versionPlus++;
             edit.style.display = "block";
             save.style.display = "none";
             cancel.style.display = "none";
 
             inputs.forEach(input => {
+
+
                 input.style.border = "none";
                 input.readOnly = true;
 
                 const name = inputs[0].value.trim();
                 const number = inputs[1].value.trim();
+                const version = versionPlus;
 
-                updateListInStorage(li, name, number);
+                updateListInStorage(li, name, number, version);
                 pageLoaded();
 
                 showPopup('success', 'Tebrikler!', 'Kayıt düzenlendi');
             });
-            localStorage.removeItem('kilitlemeBayragi');
-        })
-
-        cancel.addEventListener("click", () => {
-            deleteButton.style.display = "block";
-            edit.style.display = "block";
-            save.style.display = "none";
-            cancel.style.display = "none";
-
-            inputs.forEach(input => {
-                input.style.border = "none";
-                input.readOnly = true;
-
-                pageLoaded();
-                showPopup('error', 'Aman Dikkat!', 'Kayıt düzenlemesi iptal edildi.');
-            });
-
-            localStorage.removeItem('kilitlemeBayragi');
-        })
+        } else {
+            showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
+        }
+    });
 
 
-    } else {
-        showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
-    }
+
+    cancel.addEventListener("click", () => {
+        deleteButton.style.display = "block";
+        edit.style.display = "block";
+        save.style.display = "none";
+        cancel.style.display = "none";
+
+        inputs.forEach(input => {
+            input.style.border = "none";
+            input.readOnly = true;
+
+            pageLoaded();
+            showPopup('error', 'Aman Dikkat!', 'Kayıt düzenlemesi iptal edildi.');
+        });
+
+    })
+
+
+
 }
 
 function removeList(e) {
@@ -163,7 +171,6 @@ function allListRemove() {
                 idCounter = 1;
                 localStorage.setItem('idCounter', idCounter.toString());
 
-                localStorage.removeItem('kilitlemeBayragi');
                 showPopup('success', 'Tebrikler!', 'Tüm kayıt listesi silindi.');
             } else {
                 showPopup('success', 'Tebrikler!', 'Silme işlemi iptal edildi');
@@ -204,9 +211,9 @@ function addList(e) {
             showPopup('error', 'Dikkat', 'Böyle bir kayit vardir');
         }
         else {
-            addListToUI(inputText, inputNumber, itemId);
+            addListToUI(inputText, inputNumber, itemId, version);
 
-            addListToStorage(inputText, inputNumber, itemId);
+            addListToStorage(inputText, inputNumber, itemId, version);
 
             idCounter++;
             localStorage.setItem('idCounter', idCounter.toString());
@@ -216,17 +223,18 @@ function addList(e) {
 
 }
 
-function addListToUI(name, number, itemId) {
+
+function addListToUI(name, number, itemId, version) {
     ul.innerHTML += `
-    <li id="${itemId}">
+    <li id="${itemId}" version="${version}">
         <div class="person-info">
             <div>
                 <span>İsim: </span>
-                <input type="text" id="${itemId}" value="${name}" maxlength="25" readonly="">
+                <input type="text" value="${name}" maxlength="25" readonly="">
             </div>
             <div>
                 <span>Telefon: </span> 
-                <input type="number" id="${itemId}" value="${number}" maxlength="11" readonly="">
+                <input type="number" value="${number}" maxlength="11" readonly="">
             </div>
         </div>
         <div class="changes">   
@@ -246,13 +254,13 @@ function pageLoaded() {
     let listItems = document.querySelector('.recorded');
     listItems.innerHTML = '';
     liste.forEach(li => {
-        addListToUI(li.name, li.number, li.id);
+        addListToUI(li.name, li.number, li.id, li.version);
     })
 }
 
-function addListToStorage(inputText, inputNumber, itemId) {
+function addListToStorage(inputText, inputNumber, itemId, version) {
     checkListFromStorage();
-    liste.push({ name: inputText, number: inputNumber, id: itemId });
+    liste.push({ name: inputText, number: inputNumber, id: itemId, version: version });
     localStorage.setItem("liste", JSON.stringify(liste));
 }
 
@@ -276,13 +284,14 @@ function removeListFromStorage(name, number) {
     localStorage.setItem("liste", JSON.stringify(liste));
 }
 
-function updateListInStorage(li, name, number) {
+function updateListInStorage(li, name, number, version) {
     checkListFromStorage();
     const index = Array.from(ul.children).indexOf(li);
     if (index !== -1) {
 
         liste[index].name = name;
         liste[index].number = number;
+        liste[index].version = version;
         localStorage.setItem("liste", JSON.stringify(liste));
     }
 }
