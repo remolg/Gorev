@@ -48,6 +48,10 @@ function edit(li) {
     const save = li.querySelector(".fa-check");
     const cancel = li.querySelector(".fa-ban");
     const deleteButton = li.querySelector(".fa-xmark");
+    const kayitlilar = document.querySelectorAll("li");
+    let listedekiIsimler = [];
+    let listedekiNumaralar = [];
+
 
     save.style.display = "block";
     cancel.style.display = "block";
@@ -59,37 +63,64 @@ function edit(li) {
         input.readOnly = false;
     });
 
+    kayitlilar.forEach(function (kayitli) {
+        let isimInput = kayitli.querySelector('input[type="text"]');
+        let numberInput = kayitli.querySelector('input[type="number"]');
+        listedekiIsimler.push(isimInput.value);
+        listedekiNumaralar.push(parseInt(numberInput.value));
+    })
+
     save.addEventListener("click", () => {
+        var firstInputValue = li.querySelector('input[type="text"]').value.trim();
+        var secondInputValue = li.querySelector('input[type="number"]').value.trim();
+
         var versionPlus = li.getAttribute('version');
         var veri = localStorage.getItem("liste");
         var veriNesnesi = JSON.parse(veri);
         var istenenIndex = li.id - 1;
         var istenenVersiyon = veriNesnesi[istenenIndex].version;
 
-        if (versionPlus == istenenVersiyon) {
-            console.log(versionPlus, istenenVersiyon)
-            versionPlus++;
-            edit.style.display = "block";
-            save.style.display = "none";
-            cancel.style.display = "none";
 
-            inputs.forEach(input => {
-
-
-                input.style.border = "none";
-                input.readOnly = true;
-
-                const name = inputs[0].value.trim();
-                const number = inputs[1].value.trim();
-                const version = versionPlus;
-
-                updateListInStorage(li, name, number, version);
-                pageLoaded();
-
-                showPopup('success', 'Tebrikler!', 'Kayıt düzenlendi');
-            });
+        if (firstInputValue == '' || secondInputValue == '') {
+            showPopup('error', 'Boş Kutu', 'Lütfen kutucukları doldurun');
+            return;
         } else {
-            showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
+            if (!isNaN(firstInputValue)) {
+                showPopup('error', 'İsim Hatası', 'Lütfen isminizi doğru yazınız!');
+                return;
+            } else if (secondInputValue.length < 11 || secondInputValue.length > 11) {
+                showPopup('error', 'Numara Hatası', 'Lütfen Numaranızı doğru yazınız!');
+                return;
+            } else if (listedekiIsimler.includes(firstInputValue) || listedekiNumaralar.includes(secondInputValue)) {
+                showPopup('error', 'Dikkat', 'Böyle bir kayit vardir');
+                return;
+            } else {
+                if (versionPlus == istenenVersiyon) {
+                    versionPlus++;
+                    edit.style.display = "block";
+                    save.style.display = "none";
+                    cancel.style.display = "none";
+
+                    inputs.forEach(input => {
+
+
+                        input.style.border = "none";
+                        input.readOnly = true;
+
+                        const name = inputs[0].value.trim();
+                        const number = inputs[1].value.trim();
+                        const version = versionPlus;
+
+                        updateListInStorage(li, name, number, version);
+                        pageLoaded();
+
+                        showPopup('success', 'Tebrikler!', 'Kayıt düzenlendi');
+                    });
+                } else {
+                    showPopup('error', 'Hata!', 'Kaydın yeni versiyonu oluşturuldu sayfayı yenileyip tekrar deneyin!');
+                }
+            }
+
         }
     });
 
@@ -312,6 +343,8 @@ function showPopup(icon, title, text) {
         text: text,
     });
 }
+
+
 
 // qs kislat
 // id ekle 
