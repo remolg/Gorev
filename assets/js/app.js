@@ -31,7 +31,7 @@ function filter(e) {
 
     if (kaydedilenler.length > 0) {
         kaydedilenler.forEach((kayitli) => {
-            var isimInput = kayitli.querySelector('input[type="text"]');
+            let isimInput = kayitli.querySelector('input[type="text"]');
             isimInput.value.toLowerCase().trim().includes(filterValue) ?
                 kayitli.setAttribute("style", "display:flex") : kayitli.setAttribute("style", "display:none");
         })
@@ -49,8 +49,6 @@ function edit(li) {
     const cancel = li.querySelector(".fa-ban");
     const deleteButton = li.querySelector(".fa-xmark");
     const kayitlilar = document.querySelectorAll("li");
-    let listedekiIsimler = [];
-    let listedekiNumaralar = [];
 
 
     save.style.display = "block";
@@ -63,23 +61,29 @@ function edit(li) {
         input.readOnly = false;
     });
 
+    let listedekiIsimler = [];
+    let listedekiNumaralar = [];
+
     kayitlilar.forEach(function (kayitli) {
         let isimInput = kayitli.querySelector('input[type="text"]');
         let numberInput = kayitli.querySelector('input[type="number"]');
         listedekiIsimler.push(isimInput.value);
-        listedekiNumaralar.push(parseInt(numberInput.value));
+        listedekiNumaralar.push((numberInput.value));
     })
 
     save.addEventListener("click", () => {
-        var firstInputValue = li.querySelector('input[type="text"]').value.trim();
-        var secondInputValue = li.querySelector('input[type="number"]').value.trim();
+        let firstInputValue = li.querySelector('input[type="text"]').value.trim();
+        let secondInputValue = li.querySelector('input[type="number"]').value.trim();
 
-        var versionPlus = li.getAttribute('version');
-        var veri = localStorage.getItem("liste");
-        var veriNesnesi = JSON.parse(veri);
-        var istenenIndex = li.id - 1;
-        var istenenVersiyon = veriNesnesi[istenenIndex].version;
 
+        var id = li.getAttribute('id');
+
+        let versionPlus = li.getAttribute('version');
+        let objects = JSON.parse(localStorage.getItem("liste"));
+
+        var matchingObject = objects.find(function (obj) {
+            return obj.id === parseInt(id);
+        });
 
         if (firstInputValue == '' || secondInputValue == '') {
             showPopup('error', 'Boş Kutu', 'Lütfen kutucukları doldurun');
@@ -95,7 +99,7 @@ function edit(li) {
                 showPopup('error', 'Dikkat', 'Böyle bir kayit vardir');
                 return;
             } else {
-                if (versionPlus == istenenVersiyon) {
+                if (matchingObject && matchingObject.version == versionPlus) {
                     versionPlus++;
                     edit.style.display = "block";
                     save.style.display = "none";
@@ -343,8 +347,3 @@ function showPopup(icon, title, text) {
         text: text,
     });
 }
-
-
-
-// qs kislat
-// id ekle 
