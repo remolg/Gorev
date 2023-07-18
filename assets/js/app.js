@@ -75,13 +75,11 @@ function edit(li) {
         let firstInputValue = li.querySelector('input[type="text"]').value.trim();
         let secondInputValue = li.querySelector('input[type="number"]').value.trim();
 
-
-        var id = li.getAttribute('id');
-
+        let id = li.getAttribute('id');
         let versionPlus = li.getAttribute('version');
         let objects = JSON.parse(localStorage.getItem("liste"));
 
-        var matchingObject = objects.find(function (obj) {
+        let matchingObject = objects.find(function (obj) {
             return obj.id === parseInt(id);
         });
 
