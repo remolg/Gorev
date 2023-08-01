@@ -262,11 +262,11 @@ function addListToUI(name, number, itemId, version) {
     <li id="${itemId}" version="${version}">
         <div class="person-info">
             <div>
-                <span>İsim: </span>
+                <span>Name: </span>
                 <input type="text" value="${name}" maxlength="25" readonly="">
             </div>
             <div>
-                <span>Telefon: </span> 
+                <span>Phone: </span> 
                 <input type="number" value="${number}" maxlength="11" readonly="">
             </div>
         </div>

@@ -17,14 +17,14 @@
 <body>
     <div class="container">
 
-        <h1>Kişileri Kaydet</h1>
+        <h1>Save Contact</h1>
 
         <div class="card-body">
             <form class="task">
 
                 <div class="enter-name">
                     <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Adınız" maxlength="25" autocomplete="off">
+                    <input type="text" id="name" placeholder="Name" maxlength="25" autocomplete="off">
                 </div>
 
                 <div class="enter-phone">
@@ -32,22 +32,22 @@
                     <input type="tel" id="phone" placeholder="+90" autocomplete="off">
                 </div>
 
-                <button class="btn save" type="submit">Kaydet</button>
+                <button class="btn save" type="submit">Save</button>
 
             </form>
         </div>
 
 
-        <h1>Kaydedilen Kişiler</h1>
+        <h1>Recorded Contacts</h1>
 
-        <input type="text" id="nameSearch" placeholder="Bulmak istediğiniz kişinin ismini giriniz.." maxlength="25"
+        <input type="text" id="nameSearch" placeholder="Enter the name of the person you want to find.." maxlength="25"
             required autocomplete="off">
 
         <ul class="recorded">
 
         </ul>
 
-        <button id="clear-all" class="btn">Tümünü temizle</button>
+        <button id="clear-all" class="btn">Clear all</button>
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
