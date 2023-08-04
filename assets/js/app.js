@@ -22,7 +22,6 @@ function runEvents() {
     window.addEventListener("load", pageLoaded);
     phoneInput.addEventListener('input', justNumbers);
     arama.addEventListener("keyup", filter)
-
 };
 
 function filter(e) {
@@ -38,7 +37,6 @@ function filter(e) {
     } else {
         showPopup('error', 'Afedersin...', 'HERHANGI BIR KAYIT BULUNMAMAKTADIR');
     }
-
 }
 
 
