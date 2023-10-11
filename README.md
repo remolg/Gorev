@@ -1,38 +1,38 @@
 
-# Telefon rehberi 
+# Phonebook
 
-Bu proje javascript öğrenirken öğrendiklerimi pekiştirmek için yaptığım bir projedir.
+This project is something I made to reinforce what I learned while learning JavaScript.
 
-## Neler Yapılabilir
+## What Can You Do
 
-- İsim / Telefon numarası ekleyebilirsin
+- You can add a name / phone number.
 
-- Eklediğin isim / telefon numarasını değiştirebilirsin 
+- You can change the name / phone number you added.
 
-- Eklediğin isim / telefon numarasını silebilirsin
+- You can delete the name / phone number you added.
 
-- Eklediğin İsim ve telefon numaralarını bir anda silebilirsin 
+- You can delete all the names and phone numbers you added at once.
 
-- Yanlış kararlar vermemen için her yaptığın silme eylemlerinde EMİN MİSİN mesajları alırsın 
+- To prevent you from making wrong decisions, you will receive ARE YOU SURE messages for every deletion action you make.
 
-- Yanlış doldurmalar üzerine hata mesajları alırsın 
+- You will receive error messages upon incorrect fillings.
 
-### Örnek olarak 
+### For example
 
-- İsim kısmına Rakam giremezsin
+- You cannot enter numbers in the name field.
 
-- Numara kısmına Harf giremezsin
+- You cannot enter letters in the number field.
 
   
-## Bilgisayarınızda Çalıştırın
+## Run on Your Computer
 
-Projeyi klonlayın
+Clone the project
 
 ```bash
   git clone https://github.com/remolg/Phonebook-app.git
 ```
 
-Proje dizinine gidin
+Go to the project directory
 
 ```bash
   cd desktop
@@ -40,9 +40,9 @@ Proje dizinine gidin
   cd "Phonebook-app"
 ```
 
+Or You can go by clicking on the link
 
-  
-## Ekran Görüntüleri
+-[Phonebook App](https://sadikahmetozdemir.me/projects/Phonebook-app/index.html)
 
 ![Uygulama Ekran Görüntüsü](assets/img/phonebook.png)
 
